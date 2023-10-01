@@ -1,94 +1,93 @@
-# Projet d'Automatisation VXLAN EVPN
+# VXLAN EVPN Automation Project
 
-Ce projet vise à automatiser la création et la gestion d'un laboratoire de test VXLAN EVPN en utilisant ContainerLab, Arista cEOS, Cisco N9Kv, et Netbox. L'automatisation est réalisée principalement grâce à Ansible et des scripts Python.  
+This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS, Cisco N9Kv, and Netbox. The automation is primarily achieved through Ansible and Python scripts.
 
-🖋️ **_NOTE_**: L'environnement utilisé est un Debian 12 :
+🖋️ **_NOTE_**: The environment used is Debian 12:
 
 ```bash
-No LSB modules are available.
 Distributor ID: Debian
 Description:    Debian GNU/Linux 12 (bookworm)
 Release:        12
 Codename:       bookworm
 ```
 
-## Table des matières
+## Table of Contents
 
-1. [Pré-requis](#pré-requis)
+1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
 3. [Usage](#usage)
-4. [Structure du projet](#structure-du-projet)
+4. [Project Structure](#project-structure)
 5. [Contributions](#contributions)
-6. [Licence](#licence)
+6. [License](#license)
 7. [Sources](#sources)
 
-## Pré-requis
+## Prerequisites
 
-- Docker, ContainerLab et Ansible installés.
-- Images pour Arista cEOS, Cisco N9Kv et Linux Alpine téléchargées.
-- Python 3.11 avec les bibliothèques nécessaires (voir `requirements.txt`).
+- Docker, ContainerLab, and Ansible installed.
+- Images for Arista cEOS, Cisco N9Kv, and Linux Alpine downloaded.
+- Python 3.11 with the necessary libraries installed (see `requirements.txt`).
 
 ## Installation
 
-1. **Clonez le dépôt** :
+1. **Clone the Repository**:
 
-   ```bash
-   git clone https://github.com/MasqAs/projet-vxlan-automation.git
-   cd projet-vxlan-automation
-   ```
+    ```bash
+    git clone https://github.com/MasqAs/vxlan-evpn-automation-project.git
+    cd vxlan-evpn-automation-project
+    ```
 
-2. **Installez les dépendances Python** :
+2. **Install Python Dependencies**:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-3. **(Optionnel) Configurez les variables** :
+3. **Install Depedencies**:
 
-   Adaptez les variables dans `ansible/vars/main.yml` selon vos besoins.
+    The instructions are described here : [Installation Documentation](./documentation/INSTALLATION.md)
 
-4. **Lancez l'automatisation** :
+4. **Start the Automation**:
 
-   Suivez les étapes dans [Usage](#usage) pour démarrer votre lab.
+    Follow the steps in [Usage](#usage) to start your lab.
 
 ## Usage
 
-1. **Mise en place du lab** :
+1. **Set Up the Lab**:
 
-   ```bash
-   sudo containerlab deploy --topo containerlab/lab_definition.yml
-   ```
+    ```bash
+    sudo containerlab deploy --topo containerlab/lab_definition.yml
+    ```
 
-2. **Configurer Netbox** :
+2. **Configure Netbox**:
 
-   ```bash
-   ansible-playbook ansible/playbooks/deploy_netbox.yml
-   ```
+    ```bash
+    ansible-playbook ansible/playbooks/deploy_netbox.yml
+    ```
 
-3. **(Autres étapes)** :
+3. **(Additional Steps)**:
 
-   Suivez les instructions supplémentaires dans `documentation/USAGE.md`.
+    Follow the additional instructions in `documentation/USAGE.md`.
 
-## Structure du projet
+## Project Structure
 
-- `/ansible/` - Contient tous les playbooks, rôles, variables, et inventaires d'Ansible.
-- `/python-scripts/` - Scripts Python pour diverses tâches.
-- `/containerlab/` - Définitions et configurations pour ContainerLab.
-- `/configs/` - Configurations initiales pour les équipements réseau.
-- `/documentation/` - Documentation détaillée du projet.
-- `/suzieq/` - Fichiers spécifiques à SuzieQ.
+- `/ansible/` - Contains all Ansible playbooks, roles, variables, and inventories.
+- `/python-scripts/` - Python scripts for various tasks.
+- `/containerlab/` - Definitions and configurations for ContainerLab.
+- `/configs/` - Initial configurations for network equipment.
+- `/documentation/` - Detailed project documentation.
+- `/suzieq/` - Files specific to SuzieQ.
 
-Pour plus de détails, veuillez consulter `documentation/STRUCTURE.md`.
+For more details, please refer to `documentation/STRUCTURE.md`.
 
 ## Contributions
 
-Les contributions sont les bienvenues ! Veuillez soumettre des pull requests ou ouvrir des issues pour toute suggestion ou correction.
+Contributions are welcome! Please submit pull requests or open issues for any suggestions or corrections.
 
-## Licence
+## License
 
-Ce projet est sous licence APACHE. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.
+This project is licensed under the APACHE license. See the [LICENSE](LICENSE) file for more information.
 
 ## Sources
 
 - [ContainerLab](https://containerlab.dev/manual/kinds/ext-container/)
-- [The ACSII Construct](https://www.theasciiconstruct.com/post/multivendor-evpn-vxlan-l2-overlay/)
+- [The ASCII Construct](https://www.theasciiconstruct.com/post/multivendor-evpn-vxlan-l2-overlay/)
