@@ -89,5 +89,5 @@ This project is licensed under the APACHE license. See the [LICENSE](LICENSE) fi
 
 ## Sources
 
-- [ContainerLab](https://containerlab.dev/manual/kinds/ext-container/)
+- [ContainerLab](https://containerlab.dev/)
 - [The ASCII Construct](https://www.theasciiconstruct.com/post/multivendor-evpn-vxlan-l2-overlay/)
