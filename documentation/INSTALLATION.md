@@ -74,56 +74,19 @@ To add this new image to docker, please use the docker CLI command :
 docker import cEOS-lab-4.30.3M.tar ceos:4.30.3M
 ```
 
-### Cisco N9Kv
-
-Cisco’s N9Kv is also available for free (again, locked behind an account registration).  
-Please, download the qcow2 image and move it to the vrnetlab/n9kv folder :
+### Cisco SR Linux
 
 ```bash
-➜  n9kv git:(master) pwd
-/opt/vrnetlab/n9kv
-➜  n9kv git:(master) ls -l
-total 1931856
-drwxr-xr-x 2 root root       4096  8 oct.  13:44 docker
--rw-r--r-- 1 root root        508  8 oct.  13:44 Makefile
--rwxr--r-- 1 root root 1978204160 14 mai    2022 nxosv.10.2.3.qcow2
--rw-r--r-- 1 root root        585  8 oct.  13:44 README.md
+docker pull ghcr.io/nokia/srlinux
 ```
 
-Be sure to use the "n9kv" folder and not the "nxos" folder - the "nxos" folder is for the older titanium images. Once the image is copied here, trigger "make" to build the docker image for this
-
-```bash
-➜  n9kv git:(master) sudo make                                
-for IMAGE in nxosv.10.2.3.qcow2; do \
-        echo "Making $IMAGE"; \
-        make IMAGE=$IMAGE docker-build; \
-done
-Making nxosv.10.2.3.qcow2
-make[1] : on entre dans le répertoire « /opt/vrnetlab/n9kv »
-rm -f docker/*.qcow2* docker/*.tgz* docker/*.vmdk* docker/*.iso
-Building docker image using nxosv.10.2.3.qcow2 as vrnetlab/vr-n9kv:10.2.3
-cp ../common/* docker/
-make IMAGE=$IMAGE docker-build-image-copy
-make[2] : on entre dans le répertoire « /opt/vrnetlab/n9kv »
-cp nxosv.10.2.3.qcow2* docker/
-make[2] : on quitte le répertoire « /opt/vrnetlab/n9kv »
-(cd docker; docker build --build-arg http_proxy= --build-arg https_proxy= --build-arg IMAGE=nxosv.10.2.3.qcow2 -t vrnetlab/vr-n9kv:10.2.3 .)
-[+] Building 96.9s (10/10) 
-FINISHED
-docker:default
-
-[...]
-
- => [internal] load build definition from Dockerfile
-make[1] : on quitte le répertoire « /opt/vrnetlab/n9kv »
-```
 
 Now you should see images available to use :
 ```bash
-➜  n9kv git:(master) sudo docker images 
-REPOSITORY         TAG       IMAGE ID       CREATED         SIZE
-vrnetlab/vr-n9kv   9.3.9     75c3c348b49f   48 seconds ago  2.43GB
-ceos               4.30.3M   63870e68ff8d   2 hours ago     1.95GB
+➜  projet-vxlan-automation git:(main) ✗ docker images
+REPOSITORY              TAG       IMAGE ID       CREATED       SIZE
+ceos                    4.30.3M   63870e68ff8d   2 days ago    1.95GB
+ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ```
 
 ## Sources

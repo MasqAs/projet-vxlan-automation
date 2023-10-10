@@ -14,12 +14,12 @@ topology:
             image: ceos:4.30.3M
             mgmt-ipv4: 172.20.20.11
     leaf2:
-            kind: vr-n9kv
-            image: vrnetlab/vr-n9kv:9.3.9
+            kind: srl
+            image: ghcr.io/nokia/srlinux
             mgmt-ipv4: 172.20.20.12
     leaf3:
-            kind: vr-n9kv
-            image: vrnetlab/vr-n9kv:9.3.9
+            kind: srl
+            image: ghcr.io/nokia/srlinux
             mgmt-ipv4: 172.20.20.13
     leaf4:
             kind: ceos

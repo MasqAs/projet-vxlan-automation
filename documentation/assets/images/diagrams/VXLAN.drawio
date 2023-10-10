@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Page-1" id="O6sBWOfz2bUCuo58S4gg">
-        <mxGraphModel dx="1359" dy="888" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="1082" dy="868" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -52,13 +52,13 @@
                 <mxCell id="aTlmoTqcXMnjitFqs7Kw-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;strokeColor=#5c5c5c;flowAnimation=1;" parent="1" source="aTlmoTqcXMnjitFqs7Kw-11" target="aTlmoTqcXMnjitFqs7Kw-37" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="aTlmoTqcXMnjitFqs7Kw-11" value="&lt;b style=&quot;&quot;&gt;Cisco N9Kv&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                <mxCell id="aTlmoTqcXMnjitFqs7Kw-11" value="&lt;b style=&quot;&quot;&gt;Nokia SRLinux&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
                     <mxGeometry x="625" y="559" width="120" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="aTlmoTqcXMnjitFqs7Kw-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;strokeColor=#5c5c5c;flowAnimation=1;" parent="1" source="aTlmoTqcXMnjitFqs7Kw-12" target="aTlmoTqcXMnjitFqs7Kw-36" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="aTlmoTqcXMnjitFqs7Kw-12" value="&lt;b style=&quot;&quot;&gt;Cisco N9Kv&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                <mxCell id="aTlmoTqcXMnjitFqs7Kw-12" value="&lt;b style=&quot;&quot;&gt;Nokia SRLinux&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
                     <mxGeometry x="425" y="559" width="120" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="aTlmoTqcXMnjitFqs7Kw-19" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;strokeColor=#5c5c5c;flowAnimation=1;" parent="1" source="aTlmoTqcXMnjitFqs7Kw-14" target="aTlmoTqcXMnjitFqs7Kw-7" edge="1">
