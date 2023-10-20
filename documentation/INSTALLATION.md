@@ -16,24 +16,6 @@ bash -c "$(curl -sL https://get.containerlab.dev)"
 bash -c "$(wget -qO - https://get.containerlab.dev)"
 ```
 
-## Installing vrnetlab
-
-Vrnetlab places a VM inside a container and makes it executable as if it were a container image.  
-To do this, vrnetlab provides a set of scripts that build the container image from a VM disk provided by the user.
-
-```bash 
-# update and install dependencies
-sudo apt update
-sudo apt -y install python3-bs4 sshpass make
-sudo apt -y install git
-
-# move to /opt and clone the project
-cd /opt && sudo git clone https://github.com/hellt/vrnetlab
-
-# optional: change the directory permissions
-sudo chown -R $USER:$USER vrnetlab
-```
-
 ## Installing Docker
 
 This is the containerization engine used by ContainerLab.
@@ -74,7 +56,7 @@ To add this new image to docker, please use the docker CLI command :
 docker import cEOS-lab-4.30.3M.tar ceos:4.30.3M
 ```
 
-### Cisco SR Linux
+### Nokia SR Linux
 
 ```bash
 docker pull ghcr.io/nokia/srlinux
