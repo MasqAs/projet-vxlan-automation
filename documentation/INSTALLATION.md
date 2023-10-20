@@ -53,7 +53,7 @@ Once you created an account, please logged in and down the cEOS docker images.
 
 To add this new image to docker, please use the docker CLI command :
 ```bash
-docker import cEOS-lab-4.30.3M.tar ceos:4.30.3M
+docker import cEOS64-lab-4.30.3M.tar.xz ceos:4.30.3M
 ```
 
 ### Nokia SR Linux
@@ -61,7 +61,6 @@ docker import cEOS-lab-4.30.3M.tar ceos:4.30.3M
 ```bash
 docker pull ghcr.io/nokia/srlinux
 ```
-
 
 Now you should see images available to use :
 ```bash
