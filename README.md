@@ -32,7 +32,7 @@ Codename:       bookworm
 1. **Clone the Repository**:
 
     ```bash
-    git clone https://github.com/MasqAs/vxlan-evpn-automation-project.git
+    git clone https://github.com/MasqAs/projet-vxlan-automation.git
     cd vxlan-evpn-automation-project
     ```
 
