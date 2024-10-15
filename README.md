@@ -7,10 +7,8 @@ This project aims to automate the creation and management of a VXLAN EVPN test l
 1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
 3. [Usage](#usage)
-4. [Project Structure](#project-structure)
-5. [Contributions](#contributions)
-6. [License](#license)
-7. [Sources](#sources)
+4. [License](#license)
+5. [Sources](#sources)
 
 ## Prerequisites
 
@@ -52,27 +50,21 @@ This project aims to automate the creation and management of a VXLAN EVPN test l
 2. **Configure Netbox**:
 
     ```bash
-    ansible-playbook ansible/playbooks/deploy_netbox.yml
+    git clone -b release https://github.com/netbox-community/netbox-docker.git
+    cd netbox-docker
+    tee docker-compose.override.yml <<EOF
+    services:
+        netbox:
+            ports:
+                - 8000:8080
+    EOF
+    docker compose pull
+    docker compose up
     ```
 
 3. **(Additional Steps)**:
 
     Follow the additional instructions in `documentation/USAGE.md`.
-
-## Project Structure
-
-- `/ansible/` - Contains all Ansible playbooks, roles, variables, and inventories.
-- `/python-scripts/` - Python scripts for various tasks.
-- `/containerlab/` - Definitions and configurations for ContainerLab.
-- `/configs/` - Initial configurations for network equipment.
-- `/documentation/` - Detailed project documentation.
-- `/suzieq/` - Files specific to SuzieQ.
-
-For more details, please refer to `documentation/STRUCTURE.md`.
-
-## Contributions
-
-Contributions are welcome! Please submit pull requests or open issues for any suggestions or corrections.
 
 ## License
 
