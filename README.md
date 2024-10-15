@@ -2,15 +2,6 @@
 
 This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS, Nokia SRLinux, and Netbox. The automation is primarily achieved through Ansible and Python scripts.
 
-🖋️ **_NOTE_**: The environment used is Debian 12:
-
-```bash
-Distributor ID: Debian
-Description:    Debian GNU/Linux 12 (bookworm)
-Release:        12
-Codename:       bookworm
-```
-
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
@@ -25,7 +16,7 @@ Codename:       bookworm
 
 - Docker, ContainerLab, and Ansible installed.
 - Images for Arista cEOS, Nokia SRLinux, and Linux Alpine downloaded.
-- Python 3.11 with the necessary libraries installed (see `requirements.txt`).
+- Python 3.13 with the necessary libraries installed (see `requirements.txt`).
 
 ## Installation
 
