@@ -1,6 +1,6 @@
 # VXLAN EVPN Automation Project
 
-This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS, Nokia SRLinux, and Netbox. The automation is primarily achieved through Ansible and Python scripts.
+This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS, Nokia SRLinux, and Netbox 4.1. The automation is primarily achieved through Ansible and Python scripts.
 
 ## Table of Contents
 
@@ -49,22 +49,80 @@ This project aims to automate the creation and management of a VXLAN EVPN test l
 
 2. **Configure Netbox**:
 
+    For this project, we need to install specific plugin :
+    - [Netbox BGP](https://github.com/netbox-community/netbox-bgp)
+
     ```bash
-    git clone -b release https://github.com/netbox-community/netbox-docker.git
-    cd netbox-docker
-    tee docker-compose.override.yml <<EOF
-    services:
-        netbox:
-            ports:
-                - 8000:8080
-    EOF
-    docker compose pull
-    docker compose up
+    git clone -b release https://github.com/netbox-community/netbox-docker.git netbox
+    cd netbox
+    touch plugin_requirements.txt Dockerfile-Plugins docker-compose.override.yml
+    echo "netbox-bgp" > plugin_requirements.txt #Install BGP Plugin Pypi Package
     ```
 
-3. **(Additional Steps)**:
+    Create the Dockerfile used to build the custom Image
 
-    Follow the additional instructions in `documentation/USAGE.md`.
+    ```bash
+    cat << EOF > Dockerfile-Plugins
+    FROM netboxcommunity/netbox:latest
+
+    COPY ./plugin_requirements.txt /opt/netbox/
+    RUN /opt/netbox/venv/bin/pip install  --no-warn-script-location -r /opt/netbox/plugin_requirements.txt
+
+    COPY configuration/configuration.py /etc/netbox/config/configuration.py
+    COPY configuration/plugins.py /etc/netbox/config/plugins.py
+    RUN SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+    EOF
+    ```
+
+    > [!TIP]
+    > This `SECRET_KEY` is only used during the installation. There's no need to change it.
+
+    Create the `docker-compose.override.yml`
+
+    ```bash
+    cat <<EOF > docker-compose.override.yml
+    services:
+      netbox:
+        image: netbox:latest
+        pull_policy: never
+        ports:
+          - 8000:8080
+        build:
+          context: .
+          dockerfile: Dockerfile-Plugins
+      netbox-worker:
+        image: netbox:latest
+        pull_policy: never
+      netbox-housekeeping:
+        image: netbox:latest
+        pull_policy: never
+    EOF
+    ```
+
+    Enable the plugin by adding configuration in `configuration/plugins.py`
+
+    ```python
+    PLUGINS = ["netbox_bgp"]
+
+    # PLUGINS_CONFIG = {
+    #   "netbox_bgp": {
+    #     ADD YOUR SETTINGS HERE
+    #   }
+    # }
+    ```
+
+    Build and Deploy
+
+    ```bash
+    docker compose build --no-cache
+    docker compose up -d
+    ```
+
+    Create the first admin user :
+
+    ```bash
+    docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+    ```
 
 ## License
 
@@ -73,4 +131,4 @@ This project is licensed under the APACHE license. See the [LICENSE](LICENSE) fi
 ## Sources
 
 - [ContainerLab](https://containerlab.dev/)
-- [The ASCII Construct](https://www.theasciiconstruct.com/post/multivendor-evpn-vxlan-l2-overlay/)
+- [NetBox Docker Plugin](https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins)

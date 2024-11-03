@@ -1,8 +1,9 @@
+# Installation Guide
+
 ## Table of Contents
 
 1. [Installing ContainerLab](#installing-containerlab)
-2. [Installing vrnetlab](#installing-vrnetlab)
-3. [Installing Docker](#installing-docker)
+2. [Installing Docker](#installing-docker)
 
 ## Installing ContainerLab
 
@@ -52,6 +53,7 @@ To download and install the arista cEOS image, you need to be registered to [ari
 Once you created an account, please logged in and down the cEOS docker images.  
 
 To add this new image to docker, please use the docker CLI command :
+
 ```bash
 docker import cEOS64-lab-4.30.3M.tar.xz ceos:4.30.3M
 ```
@@ -63,6 +65,7 @@ docker pull ghcr.io/nokia/srlinux
 ```
 
 Now you should see images available to use :
+
 ```bash
 ➜  projet-vxlan-automation git:(main) ✗ docker images
 REPOSITORY              TAG       IMAGE ID       CREATED       SIZE
@@ -71,6 +74,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ```
 
 ## Sources
+
 - [ContainerLab](https://containerlab.dev/install/)
 - [vrnetlab](https://containerlab.dev/manual/vrnetlab/#vrnetlab)
 - [BrianLinkLetter](https://www.brianlinkletter.com/2019/03/vrnetlab-emulate-networks-using-kvm-and-docker/)
