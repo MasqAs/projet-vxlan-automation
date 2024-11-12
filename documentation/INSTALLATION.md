@@ -4,6 +4,9 @@
 
 1. [Installing ContainerLab](#installing-containerlab)
 2. [Installing Docker](#installing-docker)
+3. [Images Installation](#images-installation)
+4. [Install Netbox plugins](#install-netbox-plugins)
+5. [Sources](#sources)
 
 ## Installing ContainerLab
 
@@ -73,9 +76,108 @@ ceos                    4.30.3M   63870e68ff8d   2 days ago    1.95GB
 ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ```
 
+## Install Netbox plugins
+
+  For this project, we need to install specific plugin :  
+    - [Netbox BGP](https://github.com/netbox-community/netbox-bgp)  
+    - [Netbox Diode](https://github.com/netboxlabs/diode)
+
+  ```bash
+  git clone -b release https://github.com/netbox-community/netbox-docker.git netbox
+  cd netbox
+  touch plugin_requirements.txt Dockerfile-Plugins docker-compose.override.yml
+  cat <<EOF > plugin_requirements.txt
+  netbox-bgp
+  netboxlabs-diode-netbox-plugin
+  EOF
+  ```
+
+  Create the Dockerfile used to build the custom Image
+
+  ```bash
+  cat << EOF > Dockerfile-Plugins
+  FROM netboxcommunity/netbox:latest
+
+  COPY ./plugin_requirements.txt /opt/netbox/
+  RUN /opt/netbox/venv/bin/pip install  --no-warn-script-location -r /opt/netbox/plugin_requirements.txt
+
+  COPY configuration/configuration.py /etc/netbox/config/configuration.py
+  COPY configuration/plugins.py /etc/netbox/config/plugins.py
+  RUN SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+  EOF
+  ```
+
+  > [!TIP]  
+  > This `SECRET_KEY` is only used during the installation. There's no need to change it.
+
+  Create the `docker-compose.override.yml`
+
+  ```bash
+  cat <<EOF > docker-compose.override.yml
+  services:
+    netbox:
+      image: netbox:latest
+      pull_policy: never
+      ports:
+        - 8000:8000
+        - 8080:8080
+      build:
+        context: .
+        dockerfile: Dockerfile-Plugins
+    netbox-worker:
+      image: netbox:latest
+      pull_policy: never
+    netbox-housekeeping:
+      image: netbox:latest
+      pull_policy: never
+  EOF
+  ```
+
+  Enable the plugin by adding configuration in `configuration/plugins.py`
+
+  ```python
+  PLUGINS = [
+      "netbox_bgp",
+      "netbox_diode_plugin",
+  ]
+
+  PLUGINS_CONFIG = {
+      "netbox_diode_plugin": {
+          # Auto-provision users for Diode plugin
+          "auto_provision_users": False,
+
+          # Diode gRPC target for communication with Diode server
+          "diode_target_override": "grpc://localhost:8080/diode",
+
+          # User allowed for Diode to NetBox communication
+          "diode_to_netbox_username": "diode-to-netbox",
+
+          # User allowed for NetBox to Diode communication
+          "netbox_to_diode_username": "netbox-to-diode",
+
+          # User allowed for data ingestion
+          "diode_username": "diode-ingestion",
+      },
+  }
+  ```
+
+  Build and Deploy
+
+  ```bash
+  docker compose build --no-cache
+  docker compose up -d
+  ```
+
+  Create the first admin user :
+
+  ```bash
+  docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+  ```
+
 ## Sources
 
 - [ContainerLab](https://containerlab.dev/install/)
 - [vrnetlab](https://containerlab.dev/manual/vrnetlab/#vrnetlab)
 - [BrianLinkLetter](https://www.brianlinkletter.com/2019/03/vrnetlab-emulate-networks-using-kvm-and-docker/)
 - [Docker Engine for Debian](https://docs.docker.com/engine/install/debian/)
+- [Diode](https://github.com/netboxlabs/diode?tab=readme-ov-file)
