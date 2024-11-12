@@ -56,7 +56,9 @@ This project aims to automate the creation and management of a VXLAN EVPN test l
   services:
     netbox:
       ports:
-        - 8000:8080
+        - 8080:8080
+        - 8000:8000
+        - 8081:8081
   EOF
   docker compose pull
   docker compose up

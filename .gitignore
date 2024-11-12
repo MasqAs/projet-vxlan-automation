@@ -2,3 +2,6 @@
 documentation/assets/images/diagrams/.$VXLAN.drawio.bkp
 clab-vxlan-evpn-l2/*
 netbox/
+.env
+.venv
+.python-version

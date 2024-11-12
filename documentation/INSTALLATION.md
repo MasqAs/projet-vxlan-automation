@@ -5,7 +5,7 @@
 1. [Installing ContainerLab](#installing-containerlab)
 2. [Installing Docker](#installing-docker)
 3. [Images Installation](#images-installation)
-4. [Install Netbox plugins](#install-netbox-plugins)
+4. [Install Netbox and plugins](#install-netbox-and-plugins)
 5. [Sources](#sources)
 
 ## Installing ContainerLab
@@ -76,7 +76,7 @@ ceos                    4.30.3M   63870e68ff8d   2 days ago    1.95GB
 ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ```
 
-## Install Netbox plugins
+## Install Netbox and plugins
 
   For this project, we need to install specific plugin :  
     - [Netbox BGP](https://github.com/netbox-community/netbox-bgp)  
@@ -121,6 +121,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
       ports:
         - 8000:8000
         - 8080:8080
+        - 8081:8081
       build:
         context: .
         dockerfile: Dockerfile-Plugins

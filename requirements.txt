@@ -1,0 +1,2 @@
+PyYAML==6.0.2
+netboxlabs-diode-sdk==0.4.0
