@@ -46,6 +46,12 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 # To be able to execute docker with the current user
 sudo usermod -aG docker $USER
+
+# Create management network 
+docker network create \
+  --driver bridge \
+  --subnet=172.10.0.0/24 \
+  management
 ```
 
 ## Images installation
@@ -125,12 +131,31 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
       build:
         context: .
         dockerfile: Dockerfile-Plugins
+      networks:
+        - management
     netbox-worker:
       image: netbox:latest
       pull_policy: never
+      networks:
+        - management
     netbox-housekeeping:
       image: netbox:latest
       pull_policy: never
+      networks:
+        - management
+    postgres:
+      networks:
+        - management
+    redis:
+      networks:
+        - management
+    redis-cache:
+      networks:
+        - management
+
+  networks:
+    management:
+      external: true
   EOF
   ```
 

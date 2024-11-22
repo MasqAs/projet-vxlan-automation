@@ -1,54 +1,56 @@
 name: vxlan-evpn-l2
+mgmt:
+  network: management 
 topology: 
   nodes:
     spine1:
             kind: ceos
             image: ceos:4.30.3M
-            mgmt-ipv4: 172.20.20.101
+            mgmt-ipv4: 172.10.0.101
     spine2:
             kind: ceos
             image: ceos:4.30.3M
-            mgmt-ipv4: 172.20.20.102
+            mgmt-ipv4: 172.10.0.102
     leaf1:
             kind: ceos
             image: ceos:4.30.3M
-            mgmt-ipv4: 172.20.20.11
+            mgmt-ipv4: 172.10.0.11
     leaf2:
             kind: ceos
             image: ceos:4.30.3M
-            mgmt-ipv4: 172.20.20.12
+            mgmt-ipv4: 172.10.0.12
     leaf3:
             kind: ceos
             image: ceos:4.30.3M
-            mgmt-ipv4: 172.20.20.13
+            mgmt-ipv4: 172.10.0.13
     leaf4:
             kind: ceos
             image: ceos:4.30.3M
-            mgmt-ipv4: 172.20.20.14
+            mgmt-ipv4: 172.10.0.14
     host1:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h1_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.20.20.21
+            mgmt-ipv4: 172.10.0.21
     host2:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h2_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.20.20.22
+            mgmt-ipv4: 172.10.0.22
     host3:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h3_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.20.20.23
+            mgmt-ipv4: 172.10.0.23
     host4:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h4_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.20.20.24
+            mgmt-ipv4: 172.10.0.24
   links:
           - endpoints: ["leaf1:eth1", "spine1:eth1"]
           - endpoints: ["leaf1:eth2", "spine2:eth1"]

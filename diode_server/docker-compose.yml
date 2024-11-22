@@ -32,6 +32,8 @@ services:
     depends_on:
       - diode-ingester
       - diode-reconciler
+    networks:
+      - management
 
   diode-ingester:
     image: netboxlabs/diode-ingester:${DIODE_TAG:-latest}
@@ -48,6 +50,8 @@ services:
     depends_on:
       - diode-redis
       - diode-reconciler
+    networks:
+      - management
 
   diode-reconciler:
     image: netboxlabs/diode-reconciler:${DIODE_TAG:-latest}
@@ -68,6 +72,9 @@ services:
     ports: [ ]
     depends_on:
       - diode-redis
+    networks:
+      - management
+
   diode-redis:
     image: redis/redis-stack-server:latest
     command:
@@ -80,6 +87,13 @@ services:
     ports: [ ]
     volumes:
       - diode-redis-data:/data
+    networks:
+      - management
+
 volumes:
   diode-redis-data:
     driver: local
+
+networks:
+  management:
+    external: true
