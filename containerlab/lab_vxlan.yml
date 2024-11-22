@@ -5,27 +5,27 @@ topology:
   nodes:
     spine1:
             kind: ceos
-            image: ceos:4.30.3M
+            image: ceos:4.32.0.1F
             mgmt-ipv4: 172.10.0.101
     spine2:
             kind: ceos
-            image: ceos:4.30.3M
+            image: ceos:4.32.0.1F
             mgmt-ipv4: 172.10.0.102
     leaf1:
             kind: ceos
-            image: ceos:4.30.3M
+            image: ceos:4.32.0.1F
             mgmt-ipv4: 172.10.0.11
     leaf2:
             kind: ceos
-            image: ceos:4.30.3M
+            image: ceos:4.32.0.1F
             mgmt-ipv4: 172.10.0.12
     leaf3:
             kind: ceos
-            image: ceos:4.30.3M
+            image: ceos:4.32.0.1F
             mgmt-ipv4: 172.10.0.13
     leaf4:
             kind: ceos
-            image: ceos:4.30.3M
+            image: ceos:4.32.0.1F
             mgmt-ipv4: 172.10.0.14
     host1:
             kind: linux

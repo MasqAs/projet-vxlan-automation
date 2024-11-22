@@ -64,7 +64,7 @@ Once you created an account, please logged in and down the cEOS docker images.
 To add this new image to docker, please use the docker CLI command :
 
 ```bash
-docker import cEOS64-lab-4.30.3M.tar.xz ceos:4.30.3M
+docker import cEOS64-lab-4.32.0.1F.tar.xz ceos:4.32.0.1F
 ```
 
 ### Nokia SR Linux
@@ -78,7 +78,7 @@ Now you should see images available to use :
 ```bash
 ➜  projet-vxlan-automation git:(main) ✗ docker images
 REPOSITORY              TAG       IMAGE ID       CREATED       SIZE
-ceos                    4.30.3M   63870e68ff8d   2 days ago    1.95GB
+ceos                    4.32.0.1F   63870e68ff8d   2 days ago    1.95GB
 ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ```
 
