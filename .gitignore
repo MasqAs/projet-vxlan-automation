@@ -2,3 +2,4 @@
 documentation/assets/images/diagrams/.$VXLAN.drawio.bkp
 clab-vxlan-evpn-l2/*
 containerlab/.lab_definition.yml.bak
+containerlab/clab-vxlan-evpn-l2
