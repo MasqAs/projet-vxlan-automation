@@ -50,7 +50,7 @@ sudo usermod -aG docker $USER
 # Create management network 
 docker network create \
   --driver bridge \
-  --subnet=172.10.0.0/24 \
+  --subnet=172.20.20.0/24 \
   management
 ```
 

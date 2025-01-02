@@ -5,3 +5,5 @@ netbox/
 .env
 .venv
 .python-version
+containerlab/clab-vxlan-evpn-l2
+containerlab/.lab_vxlan.yml.bak

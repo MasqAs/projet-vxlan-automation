@@ -5,52 +5,68 @@ topology:
   nodes:
     PA_spine1:
             kind: ceos
-            image: ceos:4.32.0.1F
-            mgmt-ipv4: 172.10.0.101
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.10
     PA_spine2:
             kind: ceos
-            image: ceos:4.32.0.1F
-            mgmt-ipv4: 172.10.0.102
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.11
     PA_leaf1:
             kind: ceos
-            image: ceos:4.32.0.1F
-            mgmt-ipv4: 172.10.0.11
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.100
     PA_leaf2:
             kind: ceos
-            image: ceos:4.32.0.1F
-            mgmt-ipv4: 172.10.0.12
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.101
     PA_leaf3:
             kind: ceos
-            image: ceos:4.32.0.1F
-            mgmt-ipv4: 172.10.0.13
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.102
     PA_leaf4:
             kind: ceos
-            image: ceos:4.32.0.1F
-            mgmt-ipv4: 172.10.0.14
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.103
+    PA_SW_1:
+            kind: ceos
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.110
+    PA_SW_2:
+            kind: ceos
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.111
+    PA_SW_3:
+            kind: ceos
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.112
+    PA_SW_4:
+            kind: ceos
+            image: ceos:4.33.0F
+            mgmt-ipv4: 172.20.20.113
     host1:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h1_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.10.0.21
+            mgmt-ipv4: 172.20.20.21
     host2:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h2_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.10.0.22
+            mgmt-ipv4: 172.20.20.22
     host3:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h3_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.10.0.23
+            mgmt-ipv4: 172.20.20.23
     host4:
             kind: linux
             image: alpine:latest
             binds:
                   - hosts/h4_interfaces:/etc/network/interfaces
-            mgmt-ipv4: 172.10.0.24
+            mgmt-ipv4: 172.20.20.24
   links:
           - endpoints: ["PA_leaf1:eth1", "PA_spine1:eth1"]
           - endpoints: ["PA_leaf1:eth2", "PA_spine2:eth1"]
@@ -60,7 +76,11 @@ topology:
           - endpoints: ["PA_leaf3:eth2", "PA_spine2:eth3"]
           - endpoints: ["PA_leaf4:eth1", "PA_spine1:eth4"]
           - endpoints: ["PA_leaf4:eth2", "PA_spine2:eth4"]
-          - endpoints: ["PA_leaf1:eth3", "host1:eth1"]
-          - endpoints: ["PA_leaf2:eth3", "host2:eth1"]
-          - endpoints: ["PA_leaf3:eth3", "host3:eth1"]
-          - endpoints: ["PA_leaf4:eth3", "host4:eth1"]
+          - endpoints: ["PA_leaf1:eth3", "PA_SW_1:eth1"]
+          - endpoints: ["PA_leaf2:eth3", "PA_SW_2:eth1"]
+          - endpoints: ["PA_leaf3:eth3", "PA_SW_3:eth1"]
+          - endpoints: ["PA_leaf4:eth3", "PA_SW_4:eth1"]
+          - endpoints: ["PA_SW_1:eth2", "host1:eth1"]
+          - endpoints: ["PA_SW_2:eth2", "host2:eth1"]
+          - endpoints: ["PA_SW_3:eth2", "host3:eth1"]
+          - endpoints: ["PA_SW_4:eth2", "host4:eth1"]
