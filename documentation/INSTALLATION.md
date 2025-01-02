@@ -200,6 +200,8 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
   ```
 
+  You should be able to access to netbox via port `8080`
+
 ## Sources
 
 - [ContainerLab](https://containerlab.dev/install/)

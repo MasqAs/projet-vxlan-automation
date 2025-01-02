@@ -1,76 +1,100 @@
-import yaml
-import pynetbox
-import argparse
+import sys
 
-# Load YAML data
-def load_yaml_data(file_path):
-    with open(file_path, 'r') as file:
+import pynetbox
+import yaml
+
+
+# Function to load the YAML file
+def load_yaml(file_path):
+    with open(file_path, "r") as file:
         return yaml.safe_load(file)
 
-# Initialize NetBox client
-def init_netbox(api_url, token):
-    return pynetbox.api(api_url, token=token)
 
-# Main function to ingest data into NetBox
-def main(yaml_file_path, api_url, token):
-    # Load data from YAML
-    data = load_yaml_data(yaml_file_path)
-    nb = init_netbox(api_url, token)
+# Main function to populate IPAM
+def populate_ipam(netbox_url, netbox_token, yaml_file):
+    nb = pynetbox.api(netbox_url, token=netbox_token)
+    data = load_yaml(yaml_file)
 
-    # Ensure the Paris region exists
-    region_name = "Paris"
-    region = nb.dcim.regions.get(name=region_name)
-    if not region:
-        region = nb.dcim.regions.create({"name": region_name, "slug": region_name.lower()})
-        print(f"Region '{region_name}' created.")
-    else:
-        print(f"Region '{region_name}' already exists.")
+    for region, sites in data.items():
+        # Create or verify the region
+        region_obj = nb.dcim.regions.get(name=region)
+        if not region_obj:
+            region_obj = nb.dcim.regions.create(
+                {"name": region, "slug": region.lower()}
+            )
+            print(f"Region created: {region}")
 
-    # Process each site and its prefixes
-    for site_name, site_data in data[region_name].items():
-        # Check if the site already exists; create if not
-        site = nb.dcim.sites.get(name=site_name)
-        if not site:
-            site = nb.dcim.sites.create({
-                "name": site_name,
-                "slug": site_name.lower(),
-                "region": region.id,
-                "status": "active",
-            })
-            print(f"Site '{site_name}' created.")
-        else:
-            print(f"Site '{site_name}' already exists.")
+        for site_name, roles in sites.items():
+            # Create or verify the site
+            site_obj = nb.dcim.sites.get(name=site_name)
+            if not site_obj:
+                site_obj = nb.dcim.sites.create(
+                    {
+                        "name": site_name,
+                        "slug": site_name.lower(),
+                        "region": region_obj.id,
+                    }
+                )
+                print(f"Site created: {site_name}")
 
-        # Create prefix role if not already existing
-        role_name = f"{site_name.lower()}_underlay"
-        role = nb.ipam.roles.get(name=role_name)
-        if not role:
-            role = nb.ipam.roles.create({"name": role_name, "slug": role_name.lower()})
-            print(f"Prefix role '{role_name}' created.")
-        else:
-            print(f"Prefix role '{role_name}' already exists.")
+            for role_name, prefixes in roles.items():
+                # Verify or create the prefix role (Underlay)
+                role_obj = nb.ipam.roles.get(name=role_name)
+                if not role_obj:
+                    role_obj = nb.ipam.roles.create(
+                        {"name": role_name, "slug": role_name.lower()}
+                    )
 
-        # Add prefixes to NetBox under this role and site
-        for prefix in site_data.get("Underlay", []):
-            # Check if the prefix already exists; create if not
-            existing_prefix = nb.ipam.prefixes.get(prefix=prefix)
-            if not existing_prefix:
-                nb.ipam.prefixes.create({
-                    "prefix": prefix,
-                    "site": site.id,
-                    "status": "active",
-                    "role": role.id,
-                    "description": f"Underlay prefix for {site_name} in {region_name}",
-                })
-                print(f"Prefix '{prefix}' added to site '{site_name}'.")
-            else:
-                print(f"Prefix '{prefix}' already exists for site '{site_name}'.")
+                # First element = main prefix (e.g., 172.16.0.0/16)
+                main_prefix = prefixes.pop(0)
+                prefix_obj = nb.ipam.prefixes.get(prefix=main_prefix)
+                if not prefix_obj:
+                    prefix_obj = nb.ipam.prefixes.create(
+                        {
+                            "prefix": main_prefix,
+                            "role": role_obj.id,
+                            "site": site_obj.id,
+                        }
+                    )
+                    print(f"Main prefix created: {main_prefix}")
 
+                # Create locations (PA1, PA2, etc.) and sub-prefixes
+                for location_data in prefixes:
+                    for location, subnets in location_data.items():
+                        location_obj = nb.dcim.locations.get(
+                            name=location, site_id=site_obj.id
+                        )
+                        if not location_obj:
+                            location_obj = nb.dcim.locations.create(
+                                {
+                                    "name": location,
+                                    "slug": location.lower(),
+                                    "site": site_obj.id,
+                                }
+                            )
+                            print(f"Location created: {location}")
+
+                        for subnet in subnets:
+                            if not nb.ipam.prefixes.get(prefix=subnet):
+                                nb.ipam.prefixes.create(
+                                    {
+                                        "prefix": subnet,
+                                        "role": role_obj.id,
+                                        "site": site_obj.id,
+                                        "location": location_obj.id,
+                                    }
+                                )
+                                print(f"Sub-prefix created: {subnet} in {location}")
+
+
+# Example usage
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Ingest YAML data into NetBox using PyNetBox.")
-    parser.add_argument("yaml_file", help="Path to the YAML file containing data to ingest.")
-    parser.add_argument("--api_url", required=True, help="NetBox API URL.")
-    parser.add_argument("--token", required=True, help="NetBox API token.")
-    args = parser.parse_args()
+    if len(sys.argv) != 4:
+        print("Usage: python script.py <netbox_url> <netbox_token> <yaml_file>")
+        sys.exit(1)
 
-    main(args.yaml_file, args.api_url, args.token)
+    netbox_url = sys.argv[1]
+    netbox_token = sys.argv[2]
+    yaml_file = sys.argv[3]
+
+    populate_ipam(netbox_url, netbox_token, yaml_file)
