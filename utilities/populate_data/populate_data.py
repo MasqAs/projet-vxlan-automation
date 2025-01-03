@@ -15,27 +15,33 @@ def load_yaml(file_path):
 
 # Populate NetBox using the provided YAML data
 def populate_netbox(nb_url, nb_token, yaml_data):
+    # Connect to NetBox
     nb = pynetbox.api(nb_url, token=nb_token)
 
     try:
-        # Create Region
-        if not nb.dcim.regions.filter(name="Europe"):
+        # Create or retrieve the "Europe" region
+        regions = nb.dcim.regions.filter(name="Europe")
+        region = next(iter(regions), None)
+        if not region:
             region = nb.dcim.regions.create({"name": "Europe", "slug": "europe"})
+            print(f"Region created: {region.name}")
         else:
-            region = nb.dcim.regions.get(name="Europe")
-        print(f"Region created or already exists: {region.name}")
+            print(f"Region already exists: {region.name}")
 
-        # Create Site
-        if not nb.dcim.sites.filter(name="Paris"):
+        # Create or retrieve the "Paris" site
+        sites = nb.dcim.sites.filter(name="Paris")
+        site = next(iter(sites), None)
+        if not site:
             site = nb.dcim.sites.create(
                 {"name": "Paris", "slug": "paris", "region": region.id}
             )
+            print(f"Site created: {site.name}")
         else:
-            site = nb.dcim.sites.get(name="Paris")
-        print(f"Site created or already exists: {site.name}")
+            print(f"Site already exists: {site.name}")
 
-        # Check and create the "Underlay" role if it doesn't exist
-        underlay_role = nb.ipam.roles.get(name="Underlay")
+        # Check and create the "Underlay" IP role if it doesn't exist
+        roles = nb.ipam.roles.filter(name="Underlay")
+        underlay_role = next(iter(roles), None)
         if not underlay_role:
             underlay_role = nb.ipam.roles.create(
                 {
@@ -47,24 +53,27 @@ def populate_netbox(nb_url, nb_token, yaml_data):
             print("Role 'Underlay' created")
         underlay_role_id = underlay_role.id
 
-        # Iterate over Buildings (Tenants and Locations)
-        for building, data in (
-            yaml_data.get("Europe", {}).get("Paris", {}).get("Underlay", {}).items()
-        ):
+        # Handle "Underlay" data in the YAML
+        underlay_data = yaml_data.get("Europe", {}).get("Paris", {}).get("Underlay", {})
+        for building, subnets in underlay_data.items():
             tenant_name = building[:-3]  # Remove "_00" suffix
             location_name = building
 
-            # Create Tenant
-            if not nb.tenancy.tenants.filter(name=tenant_name):
+            # Create or retrieve the Tenant
+            tenants = nb.tenancy.tenants.filter(name=tenant_name)
+            tenant = next(iter(tenants), None)
+            if not tenant:
                 tenant = nb.tenancy.tenants.create(
                     {"name": tenant_name, "slug": tenant_name.lower()}
                 )
+                print(f"Tenant created: {tenant.name}")
             else:
-                tenant = nb.tenancy.tenants.get(name=tenant_name)
-            print(f"Tenant created or already exists: {tenant.name}")
+                print(f"Tenant already exists: {tenant.name}")
 
-            # Create Location
-            if not nb.dcim.locations.filter(name=location_name):
+            # Create or retrieve the Location
+            locations = nb.dcim.locations.filter(name=location_name)
+            location = next(iter(locations), None)
+            if not location:
                 location = nb.dcim.locations.create(
                     {
                         "name": location_name,
@@ -73,26 +82,78 @@ def populate_netbox(nb_url, nb_token, yaml_data):
                         "tenant": tenant.id,
                     }
                 )
+                print(f"Location created: {location.name}")
             else:
-                location = nb.dcim.locations.get(name=location_name)
-            print(f"Location created or already exists: {location.name}")
+                print(f"Location already exists: {location.name}")
 
-            # Create Prefixes for the Location
-            for subnet_info in data:
+            # Create Prefixes for the current Location
+            for subnet_info in subnets:
                 subnet = subnet_info.get("Subnet")
-                if not nb.ipam.prefixes.filter(prefix=subnet):
+                prefixes = nb.ipam.prefixes.filter(prefix=subnet)
+                prefix = next(iter(prefixes), None)
+                if not prefix:
                     prefix = nb.ipam.prefixes.create(
                         {
                             "prefix": subnet,
                             "site": site.id,
                             "tenant": tenant.id,
-                            "role": underlay_role_id,  # Use the numeric ID of the role
+                            "role": underlay_role_id,
                             "description": f"Underlay: {location_name}",
                         }
                     )
                     print(f"Prefix created: {prefix.prefix}")
                 else:
                     print(f"Prefix already exists: {subnet}")
+
+        # Handle "DC" subnets in the YAML
+        dc_subnets = yaml_data.get("Europe", {}).get("Paris", {}).get("DC", [])
+        # Create or retrieve the "DC" tenant
+        tenants = nb.tenancy.tenants.filter(name="DC")
+        dc_tenant = next(iter(tenants), None)
+        if not dc_tenant:
+            dc_tenant = nb.tenancy.tenants.create({"name": "DC", "slug": "dc"})
+            print(f"Tenant created: {dc_tenant.name}")
+        else:
+            print(f"Tenant already exists: {dc_tenant.name}")
+
+        # Create or retrieve the "DC" location
+        locations = nb.dcim.locations.filter(name="DC")
+        dc_location = next(iter(locations), None)
+        if not dc_location:
+            dc_location = nb.dcim.locations.create(
+                {
+                    "name": "DC",
+                    "slug": "dc",
+                    "site": site.id,
+                    "tenant": dc_tenant.id,
+                }
+            )
+            print(f"Location created: {dc_location.name}")
+        else:
+            print(f"Location already exists: {dc_location.name}")
+
+        # Associate the existing prefixes in "DC" with the "DC" tenant and location
+        for dc_subnet_info in dc_subnets:
+            subnet = dc_subnet_info.get("Subnet")
+            if subnet:
+                # Retrieve the existing prefix
+                prefixes = nb.ipam.prefixes.filter(prefix=subnet)
+                prefix = next(iter(prefixes), None)
+                if prefix:
+                    # Update the prefix to associate it with the "DC" tenant and location
+                    prefix.update(
+                        {
+                            "tenant": dc_tenant.id,
+                            "site": site.id,
+                            "role": underlay_role_id,
+                            "description": "DC-specific subnet",
+                        }
+                    )
+                    print(f"Prefix updated for DC: {prefix.prefix}")
+                else:
+                    print(f"Warning: Prefix {subnet} not found in NetBox, skipping.")
+            else:
+                print("Warning: Invalid subnet entry in DC section, skipping.")
 
     except Exception as e:
         sys.exit(f"Error configuring NetBox: {e}")

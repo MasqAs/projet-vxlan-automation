@@ -7,3 +7,4 @@ netbox/
 .python-version
 containerlab/clab-vxlan-evpn-l2
 containerlab/.lab_vxlan.yml.bak
+.vscode/settings.json

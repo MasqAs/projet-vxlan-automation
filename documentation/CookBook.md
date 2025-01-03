@@ -27,3 +27,23 @@ python utilities/populate_data/populate_data.py "http://localhost:8080/" "<netbo
 ```
 
 This script will create Region, Site, location and tenant on Netbox.
+
+### Ansible
+
+> [!NOTE]
+> Secret used for ansible vault : `netlab`
+>
+
+To be able to access via SSH to network devices, we have to install `sshpass`
+On Ubuntu/Debian :
+
+```bash
+sudo apt update
+sudo apt install -y sshpass paramiko
+```
+
+To configure the SNMP :
+
+```bash
+ansible-playbook -i inventory/ansible-inventory.yml configure_snmp.yml
+```
