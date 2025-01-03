@@ -3,43 +3,43 @@ mgmt:
   network: management 
 topology: 
   nodes:
-    PA_spine1:
+    padc_sp1_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.10
-    PA_spine2:
+    padc_sp2_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.11
-    PA_leaf1:
+    pa01_lf1_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.100
-    PA_leaf2:
+    pa02_lf2_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.101
-    PA_leaf3:
+    pa03_lf3_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.102
-    PA_leaf4:
+    pa04_lf4_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.103
-    PA_SW_1:
+    pa01_sw1_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.110
-    PA_SW_2:
+    pa02_sw1_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.111
-    PA_SW_3:
+    pa03_sw1_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.112
-    PA_SW_4:
+    pa04_sw1_00:
             kind: ceos
             image: ceos:4.33.0F
             mgmt-ipv4: 172.20.20.113
@@ -68,19 +68,19 @@ topology:
                   - hosts/h4_interfaces:/etc/network/interfaces
             mgmt-ipv4: 172.20.20.24
   links:
-          - endpoints: ["PA_leaf1:eth1", "PA_spine1:eth1"]
-          - endpoints: ["PA_leaf1:eth2", "PA_spine2:eth1"]
-          - endpoints: ["PA_leaf2:eth1", "PA_spine1:eth2"]
-          - endpoints: ["PA_leaf2:eth2", "PA_spine2:eth2"]
-          - endpoints: ["PA_leaf3:eth1", "PA_spine1:eth3"]
-          - endpoints: ["PA_leaf3:eth2", "PA_spine2:eth3"]
-          - endpoints: ["PA_leaf4:eth1", "PA_spine1:eth4"]
-          - endpoints: ["PA_leaf4:eth2", "PA_spine2:eth4"]
-          - endpoints: ["PA_leaf1:eth3", "PA_SW_1:eth1"]
-          - endpoints: ["PA_leaf2:eth3", "PA_SW_2:eth1"]
-          - endpoints: ["PA_leaf3:eth3", "PA_SW_3:eth1"]
-          - endpoints: ["PA_leaf4:eth3", "PA_SW_4:eth1"]
-          - endpoints: ["PA_SW_1:eth2", "host1:eth1"]
-          - endpoints: ["PA_SW_2:eth2", "host2:eth1"]
-          - endpoints: ["PA_SW_3:eth2", "host3:eth1"]
-          - endpoints: ["PA_SW_4:eth2", "host4:eth1"]
+          - endpoints: ["pa01_lf1_00:eth1", "padc_sp1_00:eth1"]
+          - endpoints: ["pa01_lf1_00:eth2", "padc_sp2_00:eth1"]
+          - endpoints: ["pa02_lf2_00:eth1", "padc_sp1_00:eth2"]
+          - endpoints: ["pa02_lf2_00:eth2", "padc_sp2_00:eth2"]
+          - endpoints: ["pa03_lf3_00:eth1", "padc_sp1_00:eth3"]
+          - endpoints: ["pa03_lf3_00:eth2", "padc_sp2_00:eth3"]
+          - endpoints: ["pa04_lf4_00:eth1", "padc_sp1_00:eth4"]
+          - endpoints: ["pa04_lf4_00:eth2", "padc_sp2_00:eth4"]
+          - endpoints: ["pa01_lf1_00:eth3", "pa01_sw1_00:eth1"]
+          - endpoints: ["pa02_lf2_00:eth3", "pa02_sw1_00:eth1"]
+          - endpoints: ["pa03_lf3_00:eth3", "pa03_sw1_00:eth1"]
+          - endpoints: ["pa04_lf4_00:eth3", "pa04_sw1_00:eth1"]
+          - endpoints: ["pa01_sw1_00:eth2", "host1:eth1"]
+          - endpoints: ["pa02_sw1_00:eth2", "host2:eth1"]
+          - endpoints: ["pa03_sw1_00:eth2", "host3:eth1"]
+          - endpoints: ["pa04_sw1_00:eth2", "host4:eth1"]
