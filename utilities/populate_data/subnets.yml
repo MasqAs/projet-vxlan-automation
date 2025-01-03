@@ -1,16 +1,32 @@
 Europe: 
   Paris:
+    Prefix: 172.16.0.0/16
     Underlay:
-      - 172.16.0.0/16
-      - PA1: 
-        - 172.16.0.0/31  # Spine1 ↔ Leaf1
-        - 172.16.1.0/31  # Spine2 ↔ Leaf1
-      - PA2: 
-        - 172.16.0.2/31  # Spine1 ↔ Leaf2
-        - 172.16.1.2/31  # Spine2 ↔ Leaf2
-      - PA3: 
-        - 172.16.0.4/31  # Spine1 ↔ Leaf3
-        - 172.16.1.4/31  # Spine2 ↔ Leaf3
-      - PA4: 
-        - 172.16.0.6/31  # Spine1 ↔ Leaf4
-        - 172.16.1.6/31  # Spine2 ↔ Leaf4
+      PA1_00: 
+        - Subnet: 172.16.0.0/31  # Spine1 ↔ Leaf1
+          spine: 172.16.0.0
+          leaf: 172.16.0.1
+        - Subnet: 172.16.1.0/31  # Spine2 ↔ Leaf1
+          spine: 172.16.1.0
+          leaf: 172.16.1.1
+      PA2_00: 
+        - Subnet: 172.16.0.2/31  # Spine1 ↔ Leaf2
+          spine: 172.16.0.2
+          leaf: 172.16.0.3
+        - Subnet: 172.16.1.2/31  # Spine2 ↔ Leaf2
+          spine: 172.16.1.2
+          leaf: 172.16.1.3
+      PA3_00: 
+        - Subnet: 172.16.0.4/31  # Spine1 ↔ Leaf3
+          spine: 172.16.0.4
+          leaf: 172.16.0.5
+        - Subnet: 172.16.1.4/31  # Spine2 ↔ Leaf3
+          spine: 172.16.1.4
+          leaf: 172.16.1.5
+      PA4_00: 
+        - Subnet: 172.16.0.6/31  # Spine1 ↔ Leaf4
+          spine: 172.16.0.6
+          leaf: 172.16.0.7
+        - Subnet: 172.16.1.6/31  # Spine2 ↔ Leaf4
+          spine: 172.16.1.6
+          leaf: 172.16.1.7
