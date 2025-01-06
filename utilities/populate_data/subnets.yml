@@ -5,17 +5,18 @@ Location:
   City: Paris
 
 Containers:
+  # These are "container" or "parent" prefixes in NetBox,
+  # typically used to group the more specific sub-prefixes.
   UnderlayContainer:
     cidr: 172.16.0.0/16
-    role: Container
     description: "Underlay container prefix"
-
   LoopbackContainer:
     cidr: 192.168.100.0/24
-    role: Container
     description: "Loopback container prefix"
 
 Buildings:
+  # Each building can reference a Tenant (or not).
+  # The script will create Tenants named "Orange" and "Purple" if they don't exist.
   PA1:
     Tenant: Orange
   PA2:
@@ -26,6 +27,9 @@ Buildings:
     Tenant: Purple
 
 Underlay:
+  # For each building, list the /31 subnets (or other underlay subnets).
+  # The script will associate them with the building_name custom field
+  # and the Tenant specified above.
   PA1:
     - Subnet: 172.16.0.0/31
       spine_ip: 172.16.0.0
@@ -42,12 +46,40 @@ Underlay:
       spine_ip: 172.16.1.2
       leaf_ip:  172.16.1.3
 
+  PA3:
+    - Subnet: 172.16.0.4/31
+      spine_ip: 172.16.0.4
+      leaf_ip:  172.16.0.5
+    - Subnet: 172.16.1.4/31
+      spine_ip: 172.16.1.4
+      leaf_ip:  172.16.1.5
+
+  PA4:
+    - Subnet: 172.16.0.6/31
+      spine_ip: 172.16.0.6
+      leaf_ip:  172.16.0.7
+    - Subnet: 172.16.1.6/31
+      spine_ip: 172.16.1.6
+      leaf_ip:  172.16.1.7
+
   DC:
+    # DC is often the datacenter site with spines, so we can list all the subnets
+    - Subnet: 172.16.0.0/31
+    - Subnet: 172.16.1.0/31
+    - Subnet: 172.16.0.2/31
+    - Subnet: 172.16.1.2/31
     - Subnet: 172.16.0.4/31
     - Subnet: 172.16.1.4/31
+    - Subnet: 172.16.0.6/31
+    - Subnet: 172.16.1.6/31
 
 Loopback:
+  # Typically /32 loopbacks for spines, leaves, etc.
+  # The script will create prefix objects for each one
+  # with role=Loopback and building_name="N/A" (unless you customize it).
   Spine1: 192.168.100.1/32
   Spine2: 192.168.100.2/32
   Leaf1:  192.168.110.1/32
   Leaf2:  192.168.110.2/32
+  Leaf3:  192.168.110.3/32
+  Leaf4:  192.168.110.4/32
