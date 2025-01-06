@@ -1,41 +1,53 @@
-Europe: 
-  Paris:
-    Prefix: 172.16.0.0/16
-    Underlay:
-      PA1_00: 
-        - Subnet: 172.16.0.0/31  # Spine1 ↔ Leaf1
-          spine: 172.16.0.0
-          leaf: 172.16.0.1
-        - Subnet: 172.16.1.0/31  # Spine2 ↔ Leaf1
-          spine: 172.16.1.0
-          leaf: 172.16.1.1
-      PA2_00: 
-        - Subnet: 172.16.0.2/31  # Spine1 ↔ Leaf2
-          spine: 172.16.0.2
-          leaf: 172.16.0.3
-        - Subnet: 172.16.1.2/31  # Spine2 ↔ Leaf2
-          spine: 172.16.1.2
-          leaf: 172.16.1.3
-      PA3_00: 
-        - Subnet: 172.16.0.4/31  # Spine1 ↔ Leaf3
-          spine: 172.16.0.4
-          leaf: 172.16.0.5
-        - Subnet: 172.16.1.4/31  # Spine2 ↔ Leaf3
-          spine: 172.16.1.4
-          leaf: 172.16.1.5
-      PA4_00: 
-        - Subnet: 172.16.0.6/31  # Spine1 ↔ Leaf4
-          spine: 172.16.0.6
-          leaf: 172.16.0.7
-        - Subnet: 172.16.1.6/31  # Spine2 ↔ Leaf4
-          spine: 172.16.1.6
-          leaf: 172.16.1.7
-      DC :
-        - Subnet: 172.16.0.0/31
-        - Subnet: 172.16.1.0/31
-        - Subnet: 172.16.0.2/31
-        - Subnet: 172.16.1.2/31
-        - Subnet: 172.16.0.4/31
-        - Subnet: 172.16.1.4/31
-        - Subnet: 172.16.0.6/31
-        - Subnet: 172.16.1.6/31
+Fabric: VXLAN-Campus
+
+Location:
+  Region: Europe
+  City: Paris
+
+Containers:
+  UnderlayContainer:
+    cidr: 172.16.0.0/16
+    role: Container
+    description: "Underlay container prefix"
+
+  LoopbackContainer:
+    cidr: 192.168.100.0/24
+    role: Container
+    description: "Loopback container prefix"
+
+Buildings:
+  PA1:
+    Tenant: Orange
+  PA2:
+    Tenant: Purple
+  PA3:
+    Tenant: Orange
+  PA4:
+    Tenant: Purple
+
+Underlay:
+  PA1:
+    - Subnet: 172.16.0.0/31
+      spine_ip: 172.16.0.0
+      leaf_ip:  172.16.0.1
+    - Subnet: 172.16.1.0/31
+      spine_ip: 172.16.1.0
+      leaf_ip:  172.16.1.1
+
+  PA2:
+    - Subnet: 172.16.0.2/31
+      spine_ip: 172.16.0.2
+      leaf_ip:  172.16.0.3
+    - Subnet: 172.16.1.2/31
+      spine_ip: 172.16.1.2
+      leaf_ip:  172.16.1.3
+
+  DC:
+    - Subnet: 172.16.0.4/31
+    - Subnet: 172.16.1.4/31
+
+Loopback:
+  Spine1: 192.168.100.1/32
+  Spine2: 192.168.100.2/32
+  Leaf1:  192.168.110.1/32
+  Leaf2:  192.168.110.2/32
