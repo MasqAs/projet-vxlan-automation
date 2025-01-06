@@ -79,7 +79,11 @@ Loopback:
   # with role=Loopback and building_name="N/A" (unless you customize it).
   Spine1: 192.168.100.1/32
   Spine2: 192.168.100.2/32
-  Leaf1:  192.168.110.1/32
-  Leaf2:  192.168.110.2/32
-  Leaf3:  192.168.110.3/32
-  Leaf4:  192.168.110.4/32
+  LeafPA1:  192.168.110.1/32
+  LeafPA2:  192.168.110.2/32
+  LeafPA3:  192.168.110.3/32
+  LeafPA4:  192.168.110.4/32
+  SwitchPA1: 192.168.120.1/32
+  SwitchPA2: 192.168.120.2/32
+  SwitchPA3: 192.168.120.3/32
+  SwitchPA4: 192.168.120.4/32
