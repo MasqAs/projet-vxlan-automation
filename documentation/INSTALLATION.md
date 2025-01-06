@@ -95,6 +95,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   cat <<EOF > plugin_requirements.txt
   netbox-bgp
   netboxlabs-diode-netbox-plugin
+  netbox-napalm-plugin
   EOF
   ```
 
@@ -165,26 +166,27 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   PLUGINS = [
       "netbox_bgp",
       "netbox_diode_plugin",
+      "netbox_napalm_plugin",
   ]
 
-  PLUGINS_CONFIG = {
-      "netbox_diode_plugin": {
-          # Auto-provision users for Diode plugin
-          "auto_provision_users": False,
-
-          # Diode gRPC target for communication with Diode server
-          "diode_target_override": "grpc://localhost:8080/diode",
-
-          # User allowed for Diode to NetBox communication
-          "diode_to_netbox_username": "diode-to-netbox",
-
-          # User allowed for NetBox to Diode communication
-          "netbox_to_diode_username": "netbox-to-diode",
-
-          # User allowed for data ingestion
-          "diode_username": "diode-ingestion",
-      },
-  }
+PLUGINS_CONFIG = {
+    "netbox_diode_plugin": {
+        # Auto-provision users for Diode plugin
+        "auto_provision_users": False,
+        # Diode gRPC target for communication with Diode server
+        "diode_target_override": "grpc://localhost:8080/diode",
+        # User allowed for Diode to NetBox communication
+        "diode_to_netbox_username": "diode-to-netbox",
+        # User allowed for NetBox to Diode communication
+        "netbox_to_diode_username": "netbox-to-diode",
+        # User allowed for data ingestion
+        "diode_username": "diode-ingestion",
+    },
+    "netbox_napalm_plugin": {
+        "NAPALM_USERNAME": "admin",
+        "NAPALM_PASSWORD": "admin",
+    },
+}
   ```
 
   Build and Deploy
