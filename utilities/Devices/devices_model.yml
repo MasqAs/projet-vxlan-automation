@@ -1,4 +1,3 @@
----
 manufacturers:
   - name: "Arista"
     slug: "arista"
@@ -41,4 +40,6 @@ device_types:
       - name: "Ethernet3"
         type: "40gbase-x-qsfpp"
       - name: "Ethernet4"
+        type: "40gbase-x-qsfpp"
+      - name: "Ethernet5"
         type: "40gbase-x-qsfpp"

@@ -1,4 +1,4 @@
-Fabric: VXLAN-Campus
+Fabric: VXLAN-Campus-Paris
 
 Location:
   Region: Europe
@@ -13,77 +13,6 @@ Containers:
   LoopbackContainer:
     cidr: 192.168.100.0/24
     description: "Loopback container prefix"
-
-Buildings:
-  # Each building can reference a Tenant (or not).
-  # The script will create Tenants named "Orange" and "Purple" if they don't exist.
-  PA1:
-    Tenant: Orange
-  PA2:
-    Tenant: Purple
-  PA3:
-    Tenant: Orange
-  PA4:
-    Tenant: Purple
-
-Underlay:
-  # For each building, list the /31 subnets (or other underlay subnets).
-  # The script will associate them with the building_name custom field
-  # and the Tenant specified above.
-  PA1:
-    - Subnet: 172.16.0.0/31
-      spine_ip: 172.16.0.0
-      leaf_ip:  172.16.0.1
-    - Subnet: 172.16.1.0/31
-      spine_ip: 172.16.1.0
-      leaf_ip:  172.16.1.1
-
-  PA2:
-    - Subnet: 172.16.0.2/31
-      spine_ip: 172.16.0.2
-      leaf_ip:  172.16.0.3
-    - Subnet: 172.16.1.2/31
-      spine_ip: 172.16.1.2
-      leaf_ip:  172.16.1.3
-
-  PA3:
-    - Subnet: 172.16.0.4/31
-      spine_ip: 172.16.0.4
-      leaf_ip:  172.16.0.5
-    - Subnet: 172.16.1.4/31
-      spine_ip: 172.16.1.4
-      leaf_ip:  172.16.1.5
-
-  PA4:
-    - Subnet: 172.16.0.6/31
-      spine_ip: 172.16.0.6
-      leaf_ip:  172.16.0.7
-    - Subnet: 172.16.1.6/31
-      spine_ip: 172.16.1.6
-      leaf_ip:  172.16.1.7
-
-  DC:
-    # DC is often the datacenter site with spines, so we can list all the subnets
-    - Subnet: 172.16.0.0/31
-    - Subnet: 172.16.1.0/31
-    - Subnet: 172.16.0.2/31
-    - Subnet: 172.16.1.2/31
-    - Subnet: 172.16.0.4/31
-    - Subnet: 172.16.1.4/31
-    - Subnet: 172.16.0.6/31
-    - Subnet: 172.16.1.6/31
-
-Loopback:
-  # Typically /32 loopbacks for spines, leaves, etc.
-  # The script will create prefix objects for each one
-  # with role=Loopback and building_name="N/A" (unless you customize it).
-  Spine1: 192.168.100.1/32
-  Spine2: 192.168.100.2/32
-  LeafPA1:  192.168.110.1/32
-  LeafPA2:  192.168.110.2/32
-  LeafPA3:  192.168.110.3/32
-  LeafPA4:  192.168.110.4/32
-  SwitchPA1: 192.168.120.1/32
-  SwitchPA2: 192.168.120.2/32
-  SwitchPA3: 192.168.120.3/32
-  SwitchPA4: 192.168.120.4/32
+  CustomersContainer:
+    cirdr: 10.0.0.0/8
+    description: "Customer conatiner prefix"
