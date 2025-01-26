@@ -23,7 +23,7 @@ export DIODE_API_KEY = diode-ingestion-key
 Generate a Netbox token via webui and execute the python script
 
 ```bash
-python utilities/populate_data/populate_data.py "http://localhost:8080/" "<netbox_token>" "utilities/populate_data/subnets.yml"
+python import_netbox.py http://localhost:8080 YOUR_NETBOX_TOKEN device_model.yml subnets.yml
 ```
 
 This script will create Region, Site, location and tenant on Netbox.
