@@ -314,6 +314,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pynetbox"
+version = "7.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1a/f9/e6c524e5ddc4c2788ab2f5ee1ab2d9afad49cad9c7cd3a372cf5b8433ed3/pynetbox-7.4.1.tar.gz", hash = "sha256:3f82b5964ca77a608aef6cc2fc48a3961f7667fbbdbb60646655373e3dae00c3", size = 68223 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f0/4f/fab3934a0dae677e4c23381749ad379c716c6f7fbae5711ebf8fd0cf1bdc/pynetbox-7.4.1-py3-none-any.whl", hash = "sha256:f42ce4df6ce97765df91bb4cc0c0e315683d15135265270d78f595114dd20e2b", size = 35075 },
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -383,6 +396,7 @@ dependencies = [
     { name = "ansible" },
     { name = "netboxlabs-diode-sdk" },
     { name = "paramiko" },
+    { name = "pynetbox" },
     { name = "pyyaml" },
     { name = "requests" },
 ]
@@ -392,6 +406,7 @@ requires-dist = [
     { name = "ansible", specifier = ">=11.1.0" },
     { name = "netboxlabs-diode-sdk", specifier = ">=0.4.2" },
     { name = "paramiko", specifier = ">=3.5.0" },
+    { name = "pynetbox", specifier = ">=7.4.1" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "requests", specifier = ">=2.32.3" },
 ]
