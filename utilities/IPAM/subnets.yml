@@ -3,8 +3,6 @@ Location:
   City: Paris
 
 Containers:
-  # These are "container" or "parent" prefixes in NetBox,
-  # typically used to group the more specific sub-prefixes.
   UnderlayContainer:
     cidr: 172.16.0.0/16
     description: "Underlay container prefix"
@@ -12,5 +10,5 @@ Containers:
     cidr: 192.168.100.0/24
     description: "Loopback container prefix"
   CustomersContainer:
-    cirdr: 10.0.0.0/8
-    description: "Customer conatiner prefix"
+    cidr: 10.0.0.0/8
+    description: "Customer container prefix"
