@@ -278,7 +278,7 @@ def main():
         print("ERROR: No IPAM role 'underlaycontainer' found.")
         sys.exit(1)
 
-    underlay_pfxs = nb.ipam.prefixes.filter(role_id=underlay_role.id, site_id=site.id)
+    underlay_pfxs = nb.ipam.prefixes.filter(role_id=underlay_role.id, scope_id=site.id)
     underlay_list = list(underlay_pfxs)
     if not underlay_list:
         print("ERROR: No underlay prefix found for this site.")

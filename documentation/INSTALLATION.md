@@ -93,7 +93,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   cd netbox
   touch plugin_requirements.txt Dockerfile-Plugins docker-compose.override.yml
   cat <<EOF > plugin_requirements.txt
-  netbox-bgp
+  nextbox_ui_plugin
   netboxlabs-diode-netbox-plugin
   netbox-napalm-plugin
   EOF
@@ -164,7 +164,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 
   ```python
   PLUGINS = [
-      "netbox_bgp",
+      "nextbox_ui_plugin",
       "netbox_diode_plugin",
       "netbox_napalm_plugin",
   ]
