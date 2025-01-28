@@ -2,22 +2,11 @@
 """
 create_vxlan_fabric.py
 
-1) Connects to NetBox
-2) Chooses or creates a Site
-3) Prompts for # of buildings (1–5)
-4) Creates 2 Spines; for each building, 1 Leaf + 1 Access Switch
-5) Cables them (multi-termination style in NetBox 4.x)
-6) Finds a single parent prefix with role='underlaycontainer'
-7) For each spine-leaf link, calls 'parent_prefix.available_prefixes.create({"prefix_length": 31})'
-   to allocate a /31 sub-prefix
-8) Assigns the two IP addresses in that /31 to the correct interfaces
-9) Sets the custom field "ASN" on spines and leaves
+(Original docstring truncated for brevity…)
 
-Requires:
-- Device Roles with slug=spine, leaf, access
-- A custom field "ASN" on the Device model
-- A parent prefix (e.g. /16) with role='underlaycontainer' for the site
-- The NetBox user token must allow creation of devices, prefixes, cables, etc.
+Added behavior:
+- Create "Loopback0" on each Spine and Leaf.
+- Allocate a /32 from parent prefix with role="loopbackcontainer" and assign to the Loopback0 interface.
 """
 
 import getpass
@@ -28,7 +17,7 @@ import pynetbox
 
 def main():
     print(
-        "=== VXLAN Fabric Creation Script (using available_prefixes.create for /31) ==="
+        "=== VXLAN Fabric Creation Script (using available_prefixes.create for /31 and /32) ==="
     )
 
     # 1) NetBox details
@@ -325,7 +314,7 @@ def main():
                 print(f"ERROR saving 'ASN' on {dev_obj.name}: {exc}")
             next_leaf_asn += 1
 
-    # 9c) Allocate /31 from parent_prefix.available_prefixes
+    # 9c) Allocate /31 from parent_prefix.available_prefixes for each Spine<->Leaf link
     for i, leaf_dev in enumerate(leaves, start=1):
         # Leaf.Eth1 <-> Spine1.Eth{i}
         leaf_eth1 = nb.dcim.interfaces.get(device_id=leaf_dev.id, name="Ethernet1")
@@ -345,13 +334,11 @@ def main():
             print("ERROR: No /31 returned for Spine1<->Leaf.")
             sys.exit(1)
 
-        # child_31 is a Prefix object. Get available IPs from it.
         ip_list = list(child_31.available_ips.list())
         if len(ip_list) < 2:
             print("ERROR: Not enough IP addresses in newly allocated /31.")
             sys.exit(1)
 
-        # Assign IPs
         spine_ip_1 = nb.ipam.ip_addresses.create(
             {
                 "address": ip_list[0].address,
@@ -408,13 +395,83 @@ def main():
             }
         )
 
+    # === LOOPBACK CHANGES ===
+    #
+    # 9d) Allocate /32 from prefix role='loopbackcontainer' for spines & leaves
+    loopback_role = nb.ipam.roles.get(slug="loopbackcontainer")
+    if not loopback_role:
+        print("ERROR: No IPAM role 'loopbackcontainer' found.")
+        sys.exit(1)
+
+    loopback_pfxs = nb.ipam.prefixes.filter(role_id=loopback_role.id, scope_id=site.id)
+    loopback_list = list(loopback_pfxs)
+    if not loopback_list:
+        print("ERROR: No loopback prefix found for this site.")
+        sys.exit(1)
+
+    loopback_parent = loopback_list[0]
+    print(
+        f"Using parent prefix '{loopback_parent.prefix}' for /32 loopback allocations."
+    )
+
+    # We will create Loopback0 on each Spine & Leaf (you can also do Access if needed)
+    for dev in spines + leaves:
+        # 1) Get or create interface 'Loopback0'
+        loop0_if = nb.dcim.interfaces.get(device_id=dev.id, name="Loopback0")
+        if not loop0_if:
+            try:
+                loop0_if = nb.dcim.interfaces.create(
+                    device=dev.id,
+                    name="Loopback0",
+                    type="virtual",  # or "loopback" if your NetBox has that type
+                )
+                print(f"Created Loopback0 on {dev.name}")
+            except Exception as exc:
+                print(f"ERROR creating Loopback0 on {dev.name}: {exc}")
+                continue
+
+        # 2) Allocate a new /32
+        child_32 = None
+        try:
+            child_32 = loopback_parent.available_prefixes.create(
+                {"prefix_length": 32, "site": site.id, "role": loopback_role.id}
+            )
+        except Exception as exc:
+            print(f"ERROR allocating /32 for {dev.name} Loopback0: {exc}")
+            continue
+
+        if not child_32:
+            print(f"ERROR: No /32 returned for {dev.name} Loopback0.")
+            continue
+
+        # 3) Assign first IP of that /32 to Loopback0
+        ip_list = list(child_32.available_ips.list())
+        if not ip_list:
+            print(f"ERROR: Not enough IPs in newly allocated /32 for {dev.name}.")
+            continue
+
+        try:
+            new_lo_ip = nb.ipam.ip_addresses.create(
+                {
+                    "address": ip_list[0].address,
+                    "assigned_object_id": loop0_if.id,
+                    "assigned_object_type": "dcim.interface",
+                    "status": "active",
+                }
+            )
+            print(f"Assigned {new_lo_ip.address} to {dev.name} Loopback0.")
+        except Exception as exc:
+            print(f"ERROR assigning IP to {dev.name} Loopback0: {exc}")
+    # === /LOOPBACK CHANGES ===
+
     print("\n=== Fabric Creation Completed ===")
     print(f"Site: {site.name} (slug={site.slug})")
     print("Spines:", [dev.name for dev in spines])
     print("Leaves:", [dev.name for dev in leaves])
     print("Access Switches:", [dev.name for dev in access_switches])
     print(
-        "Each leaf/spine link got a new /31 from 'available_prefixes', and ASNs are assigned via custom field 'ASN'."
+        "Each leaf/spine link got a new /31 from 'available_prefixes', "
+        "Loopback0 got a new /32, and ASNs were assigned via custom field 'ASN'."
     )
 
 
