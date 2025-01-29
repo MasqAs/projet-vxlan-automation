@@ -197,7 +197,8 @@ def create_container_prefix(netbox_url, headers, cidr, description, role_id, sit
         "prefix": cidr,
         "description": description,
         "role": role_id,
-        "site": site_id,
+        "scope_type": "dcim.site",
+        "scope_id": site_id,
     }
     resp = requests.post(create_url, headers=headers, json=payload)
     resp.raise_for_status()

@@ -103,7 +103,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 
   ```bash
   cat << EOF > Dockerfile-Plugins
-  FROM netboxcommunity/netbox:latest
+  FROM netboxcommunity/netbox:v4.2
 
   COPY ./plugin_requirements.txt /opt/netbox/
   RUN /opt/netbox/venv/bin/pip install  --no-warn-script-location -r /opt/netbox/plugin_requirements.txt
