@@ -227,8 +227,8 @@ def get_or_create_custom_field(netbox_url, headers):
     custom_field_data = {
         "name": field_name,
         "label": "ASN",
-        "type": "text",
-        "description": "Store ASN",
+        "type": "integer",
+        "description": "ASN",
         "required": False,
         "default": "",
         "weight": 100,
