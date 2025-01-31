@@ -92,7 +92,6 @@ class NetBoxBackend:
     def create_cable_if_not_exists(self, intf_a, intf_b):
         """
         Crée un câble entre deux interfaces si ce câble n'existe pas.
-        Utilise la forme multi-termination fournie par NetBox 3.x.
         """
         if not intf_a or not intf_b:
             print("[WARN] create_cable_if_not_exists: interfaces manquantes.")
