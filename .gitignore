@@ -9,3 +9,4 @@ containerlab/clab-vxlan-evpn-l2
 containerlab/.lab_vxlan.yml.bak
 .vscode/settings.json
 vxlan_automation.egg-info
+__pycache__

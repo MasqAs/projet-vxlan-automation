@@ -208,6 +208,44 @@ def create_container_prefix(netbox_url, headers, cidr, description, role_id, sit
 
 
 ########################################
+# Divers Creation
+########################################
+
+def get_or_create_custom_field(netbox_url, headers):
+    field_name = "ASN"
+    url = f"{netbox_url}/api/extras/custom-fields/"
+
+    # Check if the custom field already exists
+    response = requests.get(url, headers=headers, params={"name": field_name})
+    if response.status_code == 200:
+        existing_fields = response.json().get("results", [])
+        if existing_fields:
+            print(f"[INFO] Custom field '{field_name}' already exists.")
+            return
+
+    # Define the custom field payload
+    custom_field_data = {
+        "name": field_name,
+        "label": "ASN",
+        "type": "text",
+        "description": "Store ASN",
+        "required": False,
+        "default": "",
+        "weight": 100,
+        "filter_logic": "loose",
+        "ui_visible": "always",
+        "is_cloneable": True,
+        "object_types": ["dcim.device"],
+    }
+
+    # Create the custom field
+    create_response = requests.post(url, headers=headers, json=custom_field_data)
+    if create_response.status_code == 201:
+        print(f"[INFO] Custom field '{field_name}' created successfully.")
+    else:
+        print(f"[ERROR] Failed to create custom field: {create_response.text}")
+
+########################################
 # MAIN
 ########################################
 
@@ -238,9 +276,13 @@ def main():
     with open(subnets_file, "r") as f:
         subnets_data = yaml.safe_load(f)
 
+    # Divers Creation
+    get_or_create_custom_field(netbox_url, headers)
+
     ######################################################
     # device_model.yml : manufacturers, roles, types
     ######################################################
+
     manufacturers_cache = {}
     if "manufacturers" in device_model_data:
         for mf in device_model_data["manufacturers"]:
@@ -260,6 +302,7 @@ def main():
     ######################################################
     # subnets.yml : Region, Site, Containers, etc.
     ######################################################
+
     region_name = subnets_data.get("Location", {}).get("Region", "Europe")
     region_obj = get_or_create_region(netbox_url, headers, region_name)
     region_id = region_obj["id"]
