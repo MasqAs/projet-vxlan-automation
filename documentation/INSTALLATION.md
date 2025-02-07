@@ -87,13 +87,14 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   For this project, we need to install specific plugin :  
     - [Netbox BGP](https://github.com/netbox-community/netbox-bgp)  
     - [Netbox Diode](https://github.com/netboxlabs/diode)
+    - [Netbox Topology Views](https://github.com/netbox-community/netbox-topology-views)
 
   ```bash
   git clone -b release https://github.com/netbox-community/netbox-docker.git netbox
   cd netbox
   touch plugin_requirements.txt Dockerfile-Plugins docker-compose.override.yml
   cat <<EOF > plugin_requirements.txt
-  nextbox_ui_plugin
+  netbox_topology_views
   netboxlabs-diode-netbox-plugin
   netbox-napalm-plugin
   EOF
@@ -106,7 +107,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   FROM netboxcommunity/netbox:v4.2
 
   COPY ./plugin_requirements.txt /opt/netbox/
-  RUN /opt/netbox/venv/bin/pip install  --no-warn-script-location -r /opt/netbox/plugin_requirements.txt
+  RUN /usr/local/bin/uv pip install -r /opt/netbox/plugin_requirements.txt
 
   COPY configuration/configuration.py /etc/netbox/config/configuration.py
   COPY configuration/plugins.py /etc/netbox/config/plugins.py
@@ -123,7 +124,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   cat <<EOF > docker-compose.override.yml
   services:
     netbox:
-      image: netbox:latest
+      image: netbox:v4.2
       pull_policy: never
       ports:
         - 8000:8000
@@ -135,12 +136,12 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
       networks:
         - management
     netbox-worker:
-      image: netbox:latest
+      image: netbox:v4.2
       pull_policy: never
       networks:
         - management
     netbox-housekeeping:
-      image: netbox:latest
+      image: netbox:v4.2
       pull_policy: never
       networks:
         - management
@@ -164,7 +165,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 
   ```python
   PLUGINS = [
-      "nextbox_ui_plugin",
+      "netbox-topology-views",
       "netbox_diode_plugin",
       "netbox_napalm_plugin",
   ]
