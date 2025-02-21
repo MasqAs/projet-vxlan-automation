@@ -72,3 +72,4 @@ This project is licensed under the APACHE license. See the [LICENSE](LICENSE) fi
 
 - [ContainerLab](https://containerlab.dev/)
 - [NetBox Docker Plugin](https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins)
+- [Vector Netbox](https://www.vectornetworksllc.com/post/generating-network-device-configurations-from-netbox)

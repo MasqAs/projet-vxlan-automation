@@ -23,7 +23,7 @@ export DIODE_API_KEY = diode-ingestion-key
 Generate a Netbox token via webui and execute the python script
 
 ```bash
-python import http://localhost:8080 YOUR_NETBOX_TOKEN device_model.yml subnets.yml
+python import.py http://localhost:8080 YOUR_NETBOX_TOKEN device_model.yml subnets.yml
 ```
 
 This script will create Region, Site, and Device type on netbox.  
@@ -48,3 +48,5 @@ To configure the SNMP :
 ```bash
 ansible-playbook -i inventory/ansible-inventory.yml configure_snmp.yml
 ```
+
+## Create Fabric

@@ -47,7 +47,7 @@ l2vpn = nb_backend.create_l2vpn(vni_id, f"{customer_name}_vpn", l2vpn_slug, tena
 
 # Create VLAN
 vlan_slug = f"{customer_name.lower().replace(' ', '-')}-vlan"
-vlan = nb_backend.create_vlan(vlan_id, f"{customer_name}_vlan", vlan_slug, tenant.id, location.id)
+vlan = nb_backend.create_vlan(vlan_id, f"{customer_name}_vlan", vlan_slug, tenant.id)
 
 # Create VXLAN termination
 vxlan_termination = nb_backend.create_vxlan_termination(l2vpn.id, "ipam.vlan", vlan.id)
