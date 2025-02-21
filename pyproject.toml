@@ -9,9 +9,6 @@ authors = [
     { name = "darnodo", email = "sepales.pret0h@icloud.com" },
 ]
 dependencies = [
-    "ansible>=11.1.0",
-    "netboxlabs-diode-sdk>=0.4.2",
-    "paramiko>=3.5.0",
     "pynetbox>=7.4.1",
     "pyyaml>=6.0.2",
     "requests>=2.32.3",
