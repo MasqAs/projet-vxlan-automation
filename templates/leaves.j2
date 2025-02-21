@@ -17,16 +17,16 @@ mtu 9214
 router bgp {{ device.custom_field_data.ASN }}
 router-id {{ router_id }}
 maximum-paths 4 ecmp 4
-neighbor LEAF_GROUP peer group
-neighbor LEAF_GROUP allowas-in 1
-neighbor LEAF_GROUP ebgp-multihop 4
-neighbor LEAF_GROUP send-community extended
-neighbor LEAF_GROUP maximum-routes 12000
+neighbor SPINE_GROUP peer group
+neighbor SPINE_GROUP allowas-in 1
+neighbor SPINE_GROUP ebgp-multihop 4
+neighbor SPINE_GROUP send-community extended
+neighbor SPINE_GROUP maximum-routes 12000
 {%- for interface in device.interfaces.all() %}
-    {%- if interface.connected_endpoints %}
+    {%- if interface.connected_endpoints and interface.name != 'Ethernet3' %}
         {%- for remote_interface in interface.connected_endpoints %}
             {%- set remote_ip = ipam.IPAddress.objects.get(assigned_object_id=remote_interface.id) %}
-neighbor {{ remote_ip.address }} peer group LEAF_GROUP
+neighbor {{ remote_ip.address }} peer group SPINE_GROUP
 neighbor {{ remote_ip.address }} remote-as {{ remote_interface.device.custom_field_data.ASN }}
         {%- endfor %}
     {%- endif %}
@@ -34,7 +34,7 @@ neighbor {{ remote_ip.address }} remote-as {{ remote_interface.device.custom_fie
 !
 address-family ipv4
 {%- for interface in device.interfaces.all() %}
-    {%- if interface.connected_endpoints %}
+    {%- if interface.connected_endpoints and interface.name != 'Ethernet3' %}
         {%- for remote_interface in interface.connected_endpoints %}
             {%- set remote_ip = ipam.IPAddress.objects.get(assigned_object_id=remote_interface.id) %}
 neighbor {{ remote_ip.address }} activate
