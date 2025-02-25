@@ -1,5 +1,9 @@
 # VXLAN EVPN Automation Project
 
+> [!WARNING]
+> Work in progress
+>
+
 This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS, Nokia SRLinux, and Netbox 4.1. The automation is primarily achieved through Ansible and Python scripts.
 
 ## Table of Contents
@@ -21,14 +25,14 @@ This project aims to automate the creation and management of a VXLAN EVPN test l
 1. **Clone the Repository**:
 
     ```bash
-    git clone https://github.com/MasqAs/projet-vxlan-automation.git
+    git clone https://github.com/darnodo/projet-vxlan-automation.git
     cd vxlan-evpn-automation-project
     ```
 
 2. **Install Python Dependencies**:
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 3. **Install Depedencies**:
@@ -44,29 +48,12 @@ This project aims to automate the creation and management of a VXLAN EVPN test l
 - **Set Up  Lab**:
 
   ```bash
-  sudo containerlab deploy --topo containerlab/lab_definition.yml
+  sudo containerlab deploy --topo containerlab/fabric_vxlan.yml
   ```
 
 - **Set Up Netbox**:
 
-  ```bash
-  git clone -b release https://github.com/netbox-community/netbox-docker.git
-  cd netbox-docker
-  tee docker-compose.override.yml <<EOF
-  services:
-    netbox:
-      ports:
-        - 8080:8080
-        - 8000:8000
-        - 8081:8081
-  EOF
-  docker compose pull
-  docker compose up
-  ```
-
-## License
-
-This project is licensed under the APACHE license. See the [LICENSE](LICENSE) file for more information.
+  All details on installation [documentation](./documentation/INSTALLATION.md#install-netbox-and-plugins)
 
 ## Sources
 
