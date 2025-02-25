@@ -12,8 +12,7 @@ The automation is primarily achieved through Netbox Render Config and Python scr
 1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
 3. [Usage](#usage)
-4. [License](#license)
-5. [Sources](#sources)
+4. [Sources](#sources)
 
 ## Prerequisites
 
