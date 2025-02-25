@@ -1,0 +1,14 @@
+Location:
+  Region: Europe
+  City: Paris
+
+Containers:
+  UnderlayContainer:
+    cidr: 172.16.0.0/16
+    description: "Underlay container prefix"
+  LoopbackContainer:
+    cidr: 192.168.100.0/24
+    description: "Loopback container prefix"
+  CustomersContainer:
+    cidr: 10.0.0.0/8
+    description: "Customer container prefix"

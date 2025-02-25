@@ -1,5 +1,12 @@
 .DS_Store
 documentation/assets/images/diagrams/.$VXLAN.drawio.bkp
 clab-vxlan-evpn-l2/*
-containerlab/.lab_definition.yml.bak
+netbox/
+.env
+.venv
+.python-version
 containerlab/clab-vxlan-evpn-l2
+containerlab/.lab_vxlan.yml.bak
+.vscode/settings.json
+vxlan_automation.egg-info
+__pycache__

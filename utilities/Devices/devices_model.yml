@@ -1,0 +1,45 @@
+manufacturers:
+  - name: "Arista"
+    slug: "arista"
+
+device_roles:
+  - name: "Access"
+    slug: "access"
+    color: "4caf50"
+    vm_role: false
+
+  - name: "Leaf"
+    slug: "leaf"
+    color: "4caf50"
+    vm_role: false
+
+  - name: "Spine"
+    slug: "spine"
+    color: "4caf50"
+    vm_role: false
+
+device_types:
+  - manufacturer: "arista"  # Must match the 'slug' in manufacturers
+    model: "ceos"
+    slug: "ceos"
+    part_number: "cEOS"
+    u_height: 1
+    is_full_depth: false
+    comments: "Arista cEOS virtual device with QSFP in 4x10G default mode"
+
+    interfaces:
+      - name: "management"
+        type: "1000base-t"
+        mgmt_only: true
+
+      # QSFP ports defaulted to 4x10G
+      - name: "Ethernet1"
+        type: "40gbase-x-qsfpp"
+      - name: "Ethernet2"
+        type: "40gbase-x-qsfpp"
+      - name: "Ethernet3"
+        type: "40gbase-x-qsfpp"
+      - name: "Ethernet4"
+        type: "40gbase-x-qsfpp"
+      - name: "Ethernet5"
+        type: "40gbase-x-qsfpp"

@@ -1,8 +1,12 @@
+# Installation Guide
+
 ## Table of Contents
 
 1. [Installing ContainerLab](#installing-containerlab)
-2. [Installing vrnetlab](#installing-vrnetlab)
-3. [Installing Docker](#installing-docker)
+2. [Installing Docker](#installing-docker)
+3. [Images Installation](#images-installation)
+4. [Install Netbox and plugins](#install-netbox-and-plugins)
+5. [Sources](#sources)
 
 ## Installing ContainerLab
 
@@ -42,6 +46,12 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 # To be able to execute docker with the current user
 sudo usermod -aG docker $USER
+
+# Create management network 
+docker network create \
+  --driver bridge \
+  --subnet=172.20.20.0/24 \
+  management
 ```
 
 ## Images installation
@@ -52,8 +62,9 @@ To download and install the arista cEOS image, you need to be registered to [ari
 Once you created an account, please logged in and down the cEOS docker images.  
 
 To add this new image to docker, please use the docker CLI command :
+
 ```bash
-docker import cEOS64-lab-4.30.3M.tar.xz ceos:4.30.3M
+docker import cEOS64-lab-4.32.0.1F.tar.xz ceos:4.32.0.1F
 ```
 
 ### Nokia SR Linux
@@ -63,14 +74,118 @@ docker pull ghcr.io/nokia/srlinux
 ```
 
 Now you should see images available to use :
+
 ```bash
 ➜  projet-vxlan-automation git:(main) ✗ docker images
 REPOSITORY              TAG       IMAGE ID       CREATED       SIZE
-ceos                    4.30.3M   63870e68ff8d   2 days ago    1.95GB
+ceos                    4.32.0.1F   63870e68ff8d   2 days ago    1.95GB
 ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ```
 
+## Install Netbox and plugins
+
+  For this project, we need to install specific plugin :  
+    - [Netbox BGP](https://github.com/netbox-community/netbox-bgp)  
+    - [Netbox Diode](https://github.com/netboxlabs/diode)
+    - [Netbox Topology Views](https://github.com/netbox-community/netbox-topology-views)
+
+  ```bash
+  git clone -b release https://github.com/netbox-community/netbox-docker.git netbox
+  cd netbox
+  touch plugin_requirements.txt Dockerfile-Plugins docker-compose.override.yml
+  cat <<EOF > plugin_requirements.txt
+  netbox_topology_views
+  netboxlabs-diode-netbox-plugin
+  netbox-napalm-plugin
+  EOF
+  ```
+
+  Create the Dockerfile used to build the custom Image
+
+  ```bash
+  cat << EOF > Dockerfile-Plugins
+  FROM netboxcommunity/netbox:v4.2
+
+  COPY ./plugin_requirements.txt /opt/netbox/
+  RUN /usr/local/bin/uv pip install -r /opt/netbox/plugin_requirements.txt
+
+  COPY configuration/configuration.py /etc/netbox/config/configuration.py
+  COPY configuration/plugins.py /etc/netbox/config/plugins.py
+  RUN SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+  EOF
+  ```
+
+  > [!TIP]  
+  > This `SECRET_KEY` is only used during the installation. There's no need to change it.
+
+  Create the `docker-compose.override.yml`
+
+  ```bash
+  cat <<EOF > docker-compose.override.yml
+  services:
+    netbox:
+      image: netbox:v4.2
+      pull_policy: never
+      ports:
+        - 8000:8000
+        - 8080:8080
+        - 8081:8081
+      build:
+        context: .
+        dockerfile: Dockerfile-Plugins
+      networks:
+        - management
+    netbox-worker:
+      image: netbox:v4.2
+      pull_policy: never
+      networks:
+        - management
+    netbox-housekeeping:
+      image: netbox:v4.2
+      pull_policy: never
+      networks:
+        - management
+    postgres:
+      networks:
+        - management
+    redis:
+      networks:
+        - management
+    redis-cache:
+      networks:
+        - management
+
+  networks:
+    management:
+      external: true
+  EOF
+  ```
+
+  Enable the plugin by adding configuration in `configuration/plugins.py`
+
+  ```python
+  PLUGINS = [
+      "netbox-topology-views"
+  ]
+  ```
+
+  Build and Deploy
+
+  ```bash
+  docker compose build --no-cache
+  docker compose up -d
+  ```
+
+  Create the first admin user :
+
+  ```bash
+  docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+  ```
+
+  You should be able to access to netbox via port `8080`
+
 ## Sources
+
 - [ContainerLab](https://containerlab.dev/install/)
 - [vrnetlab](https://containerlab.dev/manual/vrnetlab/#vrnetlab)
 - [BrianLinkLetter](https://www.brianlinkletter.com/2019/03/vrnetlab-emulate-networks-using-kvm-and-docker/)
