@@ -4,7 +4,8 @@
 > Work in progress
 >
 
-This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS, Nokia SRLinux, and Netbox 4.1. The automation is primarily achieved through Ansible and Python scripts.
+This project aims to automate the creation and management of a VXLAN EVPN test lab using ContainerLab, Arista cEOS and Netbox 4.2.  
+The automation is primarily achieved through Netbox Render Config and Python scripts.
 
 ## Table of Contents
 
