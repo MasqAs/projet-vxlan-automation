@@ -4,10 +4,16 @@ interface {{ interface.name }}
 {%- if interface.description %}
 description {{ interface.description }}
 {%- endif %}
+{%- if interface.name == 'Ethernet3' %}
+switchport mode trunk
+no shutdown
+mtu 9214
+{%- else %}
 no shutdown
 no switchport
 ip address {{ ipam.IPAddress.objects.get(assigned_object_id=interface.id).address }}
 mtu 9214
+{%- endif %}
 !
 {% endfor %}
 

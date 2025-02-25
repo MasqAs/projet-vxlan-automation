@@ -85,8 +85,6 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 ## Install Netbox and plugins
 
   For this project, we need to install specific plugin :  
-    - [Netbox BGP](https://github.com/netbox-community/netbox-bgp)  
-    - [Netbox Diode](https://github.com/netboxlabs/diode)
     - [Netbox Topology Views](https://github.com/netbox-community/netbox-topology-views)
 
   ```bash
