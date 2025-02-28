@@ -93,8 +93,6 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
   touch plugin_requirements.txt Dockerfile-Plugins docker-compose.override.yml
   cat <<EOF > plugin_requirements.txt
   netbox_topology_views
-  netboxlabs-diode-netbox-plugin
-  netbox-napalm-plugin
   EOF
   ```
 
@@ -163,7 +161,7 @@ ghcr.io/nokia/srlinux   latest    801eb020ad70   11 days ago   2.59GB
 
   ```python
   PLUGINS = [
-      "netbox-topology-views"
+      "netbox_topology_views"
   ]
   ```
 

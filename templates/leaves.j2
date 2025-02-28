@@ -48,3 +48,50 @@ neighbor {{ remote_ip.address }} activate
     {%- endif %}
 {%- endfor %}
 !
+
+{# VXLAN IRB Configuration #}
+ip virtual-router mac-address 00:0a:bc:10:11:02
+!
+
+{# VLAN Configuration #}
+{% for vlan in VLAN.objects.filter(site=device.site) %}
+{% if vlan.tenant %}
+vlan {{ vlan.vid }}
+name {{ vlan.name }}
+!
+interface Vlan{{ vlan.vid }}
+description {{ vlan.tenant.name }}_ANYCAST_GW
+vrf {{ vlan.tenant.name }}
+{% set prefix = ipam.Prefix.objects.get(vlan=vlan) %}
+{% set first_ip = prefix.first_available_ip %}
+ip address virtual {{ first_ip }}/{{ prefix.prefix.prefixlen }}
+!
+{% endif %}
+{% endfor %}
+
+{# VXLAN Interface Configuration #}
+interface Vxlan1
+description VTI
+vxlan source-interface Loopback0
+{% for vlan in ipam.VLAN.objects.filter(site=device.site) %}
+{% if vlan.tenant %}
+vxlan vlan {{ vlan.vid }} vni {{ vlan.custom_field_data.vni|default(1000 + vlan.vid) }}
+{% set remote_vteps = device.custom_field_data.remote_vteps|default([]) %}
+{% for vtep in remote_vteps %}
+vxlan vlan {{ vlan.vid }} flood vtep {{ vtep }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+!
+
+{# BGP EVPN Configuration #}
+router bgp {{ device.custom_field_data.ASN }}
+{% for vlan in ipam.VLAN.objects.filter(site=device.site) %}
+{% if vlan.tenant %}
+!
+vlan {{ vlan.vid }}
+rd {{ device.custom_field_data.rd_prefix }}:{{ device.custom_field_data.ASN }}
+route-target both {{ vlan.custom_field_data.route_target|default('10.50.0.0:1200') }}
+redistribute learned
+{% endif %}
+{% endfor %}
